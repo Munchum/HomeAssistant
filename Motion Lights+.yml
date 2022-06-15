@@ -1,0 +1,78 @@
+blueprint:
+    name: Motion Lights
+    description: Toggle motion lights within user defined parameters.
+    domain: automation
+    input:
+        motion_entity:
+        name: Motion Sensor
+        selector:
+        entity:
+          domain: binary_sensor
+          device_class: motion
+    light_target:
+      name: Light
+      selector:
+        target:
+          entity:
+            domain: light
+    light_strength:
+      name: Light Strength
+      description: Light level for configured lamps on trigger.
+      default: 50
+      selector:
+        number:
+          min: 0
+          max: 100
+    light_transition_time:
+      name: Light Transition Time
+      description: Configure the dimming speed in seconds.
+      default: 0.1
+      selector:
+        number:
+          min: 0
+          max: 30
+          step: 1
+          mode: slider
+    sunrise_offset:
+        name: Sunrise Offset
+        description: Offset from sunrise.
+        selector:
+        time:
+    sunset_offset:
+        name: Sunset Offset
+        description: Offset from sunset.
+        selector:
+        time:
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  platform: state
+  entity_id: !input motion_entity
+  from: "off"
+  to: "on"
+  
+condition:
+    condition: sun
+    after: sunset
+    after_offset: !input sunset_offset
+    before: sunrise
+    before_offset: !input sunrise_offset
+	
+action:
+  - service: light.turn_on
+    target: !input light_target
+    data:
+      brightness_pct: !input light_strength
+      transition: !input light_transition_time
+  - wait_for_trigger:
+      platform: state
+      entity_id: !input motion_entity
+      from: "on"
+      to: "off"
+  - delay: !input no_motion_wait
+  - service: light.turn_off
+    target: !input light_target
+    data:
+      transition: !input light_transition_time
