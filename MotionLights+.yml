@@ -59,6 +59,7 @@ condition:
     after_offset: !input sunset_offset
     before: sunrise
     before_offset: !input sunrise_offset
+    
 action:
   - service: light.turn_on
     target: !input light_target
