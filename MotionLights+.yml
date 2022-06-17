@@ -1,38 +1,38 @@
 blueprint:
-   name: Motion Lights
-   description: Toggle motion lights within user defined parameters.
-   domain: automation
-   input:
-    motion_entity:
-        name: Motion Sensor
+    name: Motion Lights
+    description: Toggle motion lights within user defined parameters.
+    domain: automation
+    input:
+        motion_entity:
+            name: Motion Sensor
+            selector:
+            entity:
+                domain: binary_sensor
+                device_class: motion
+    light_target:
+        name: Light/Light Group
         selector:
-        entity:
-            domain: binary_sensor
-            device_class: motion
-   light_target:
-    name: Light
-    selector:
-        target:
-          entity:
-            domain: light
+            target:
+                entity:
+                    domain: light
     light_strength:
-      name: Light Strength
-      description: Light level for configured lamps on trigger.
-      default: 50
-      selector:
+        name: Light Strength
+        description: Bightness, as percentage, for selected light upon trigger.
+        default: 50
+        selector:
         number:
-          min: 0
-          max: 100
+            min: 0
+            max: 100
     light_transition_time:
-      name: Light Transition Time
-      description: Configure the dimming speed in seconds.
-      default: 0.1
-      selector:
-        number:
-          min: 0
-          max: 30
-          step: 1
-          mode: slider
+        name: Light Transition Time
+        description: Transition time for light, in seconds, when toggling on/off
+        default: 0.1
+        selector:
+            number:
+                min: 0
+                max: 30
+                step: 1
+                mode: slider
     sunrise_offset:
         name: Sunrise Offset
         description: Offset from sunrise.
@@ -43,7 +43,7 @@ blueprint:
         description: Offset from sunset.
         selector:
         time:
-
+        
 mode: restart
 max_exceeded: silent
 
